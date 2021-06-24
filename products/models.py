@@ -1,4 +1,9 @@
-from django.db import models
+from datetime import datetime, timedelta
+
+from django.db        import models
+from django.db.models import Avg
+
+from orders.models  import Order
 
 class Category(models.Model):
     name = models.CharField(max_length=45)
@@ -36,3 +41,25 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'products'
+
+    @property
+    def avgscore(self):
+        if self.review_set.filter(product_id=self.id).exists():
+            return "{:.2f}".format(self.review_set.filter(product_id=self.id).aggregate(Avg('rating'))['rating__avg'])
+        return "0"
+
+    @property
+    def new(self):
+        return True if self.created_at > (datetime.now()-timedelta(days=3)) else False
+        
+    @property
+    def hot(self):
+        best_products = Product.objects.all().order_by('-sell_count')[:10]
+        return True if self in best_products else False
+    
+    @property
+    def discount(self):
+        return (self.price)-(self.price*self.sub_category.discount)
+
+def check(user, product):
+    return True if Order.objects.filter(user_id=user.id, product_id=product.id, status_id=1).exists() else False

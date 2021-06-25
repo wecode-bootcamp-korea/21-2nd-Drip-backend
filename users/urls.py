@@ -1,8 +1,8 @@
 from pathlib import Path
 from django.urls import path
 
-from users.views import KakaoSigninView
+# from users.views import KakaoSigninView
 
 urlpatterns = [
-    path('/signin', KakaoSigninView.as_view()),
+    # path('kakao', KakaoSigninView.as_view()),
 ]

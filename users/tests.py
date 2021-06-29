@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from drip_settings import SECRET_KEY, ALGORITHM
 from .models import User
 
-class SigninTest(unittest.TestCase):
+class SigninTest(TestCase):
     @patch('users.views.requests')
     def test_signin_succes(self, mocked_requests):
         client = Client()

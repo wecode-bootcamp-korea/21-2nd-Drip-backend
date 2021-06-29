@@ -1,5 +1,4 @@
-import json, re, bcrypt, jwt, requests
-from orders.models import Status
+import jwt, requests
 
 from django.views     import View
 from django.http      import JsonResponse

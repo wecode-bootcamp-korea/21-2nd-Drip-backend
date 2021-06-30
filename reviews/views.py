@@ -8,7 +8,7 @@ from datetime                    import datetime
 
 from drip_settings   import ACCESS_KEY, SECRET_ACCESS_KEY
 from users.utils     import login_decorator
-from .models         import Like, Review
+from .models         import Like, Review, Comment
 from products.models import Product
 
 class ReviewView(View):
@@ -49,7 +49,7 @@ class ReviewView(View):
                 product   = product,
             )
             return JsonResponse({'result' : 'SUCCESS'}, status = 201)
-
+            
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status = 400)
 
@@ -102,3 +102,32 @@ class LikeView(View):
     def delete(self, request, review_id):
         Like.objects.filter(user = request.user, review_id = review_id).delete()
         return JsonResponse({'message' : 'SUCCESS'}, status = 204)
+
+class CommentView(View):
+    @login_decorator
+    def post(self, request):
+        try:
+            data    = json.loads(request.body)
+            content = data['content']
+            user    = request.user
+            review  = Review.objects.get(id=data['review'])
+            
+            Comment.objects.create(
+                user    = user,
+                content = content,
+                review  = review
+            )
+            return JsonResponse({'message' : 'SUCCESS'}, status = 201)
+            
+        except KeyError:
+            return JsonResponse({'message' : 'KEY_ERROR'}, status = 400)
+
+    def get(self, request, review_id):
+
+        comment_list = [{
+            'user'    : comment_list.user.id,
+            'content' : comment_list.content,
+            'review'  : review_id
+        }for comment_list in Comment.objects.filter(review_id = review_id)]
+            
+        return JsonResponse({'result' : comment_list}, status = 200)

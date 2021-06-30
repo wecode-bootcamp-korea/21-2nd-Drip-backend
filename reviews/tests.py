@@ -8,8 +8,7 @@ from django.test import Client, TestCase
 from drip_settings   import SECRET_KEY, ALGORITHM
 from users.models    import User
 from products.models import Product, Search, SubCategory, Category
-from .models         import Review
-from .models         import Review, Like
+from .models         import Comment, Review, Like
 
 class ReviewTest(TestCase):
     @classmethod
@@ -93,6 +92,12 @@ class ReviewTest(TestCase):
             user_id   = 2,
             review_id = 1
         )
+        
+        Comment.objects.create(
+            content    = 'sdasdsa',
+            user_id    = 1,
+            review_id  = 1
+        )
 
     def tearDown(self):
         User.objects.all().delete()
@@ -162,6 +167,19 @@ class ReviewTest(TestCase):
                 }
         
         response  = client.post('/reviews/like', data, content_type='application/json',**headers)
+        Comment.objects.all().delete()
+        Review.objects.all().delete()
+
+    def test_comment_post_success(self):
+        client  = Client()
+        headers = {'HTTP_Authorization': self.token}
+        comment = {
+                'content' : 'sdfdssdf',
+                'review'  : 1,
+                'user'    : 1,
+                }
+        
+        response  = client.post('/reviews/comment', comment, content_type='application/json',**headers)
         
         self.assertEqual(response.json(), {'message' : 'SUCCESS'})
         self.assertEqual(response.status_code, 201)
@@ -195,3 +213,29 @@ class ReviewTest(TestCase):
     
         response  = client.delete('/reviews/like/1', content_type='application/json', **headers)
         self.assertEqual(response.status_code, 204)
+    def test_comment_key_error(self):
+        client  = Client()
+        headers = {'HTTP_Authorization': self.token}
+        comment = {
+                'review': 1,
+                'user'  : 1,
+                }
+        
+        response  = client.post('/reviews/comment', comment, content_type='application/json',**headers)
+        
+        self.assertEqual(response.json(), {'message' : 'KEY_ERROR'})
+        self.assertEqual(response.status_code, 400)
+        
+    def test_comment_get_success(self):
+        client       = Client()
+        headers      = {'HTTP_Authorization': self.token}
+        comment_list = [{
+            'user'   : 1,
+            'content': 'sdasdsa',
+            'review' : 1
+        }]
+        
+        response  = client.get('/reviews/comment/1', content_type='application/json', **headers)
+        
+        self.assertEqual(response.json(), {'result' : comment_list})
+        self.assertEqual(response.status_code, 200)

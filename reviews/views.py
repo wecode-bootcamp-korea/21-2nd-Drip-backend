@@ -77,7 +77,7 @@ class ReviewView(View):
             'review_count' : reviews.count(),
             'image_url'    : review.image_url,
             'like'         : Like.objects.filter(user_id = user.id, review_id = review.id).exists(),
-            'user_image'   : review.user.profile_image
+            'user_image'   : review.user.profile_image,
             } for review in reviews]
         return JsonResponse({'result' : review_list}, status = 200)
 
@@ -128,6 +128,5 @@ class CommentView(View):
             'user'    : comment_list.user.id,
             'content' : comment_list.content,
             'review'  : review_id
-        }for comment_list in Comment.objects.filter(review_id = review_id)]
-            
+        }for comment_list in Comment.objects.filter(review_id = review_id)] 
         return JsonResponse({'result' : comment_list}, status = 200)

@@ -106,7 +106,10 @@ class ReviewTest(TestCase):
         Category.objects.all().delete()
         SubCategory.objects.all().delete()
         Review.objects.all().delete(),
-        Like.objects.all().delete()
+        Like.objects.all().delete(),
+        Comment.objects.all().delete()
+        Review.objects.all().delete()
+
 
     @patch('reviews.views.boto3.client')
     def test_review_post_success(self, mock_s3client):
@@ -154,6 +157,7 @@ class ReviewTest(TestCase):
                 }]
 
         response  = client.get('/reviews/1', content_type = 'application/json', **headers)
+        
         self.assertEqual(response.json(), {'result' : review_list})
         self.assertEqual(response.status_code, 200)
 
@@ -167,9 +171,10 @@ class ReviewTest(TestCase):
                 }
         
         response  = client.post('/reviews/like', data, content_type='application/json',**headers)
-        Comment.objects.all().delete()
-        Review.objects.all().delete()
 
+        self.assertEqual(response.json(), {'message' : 'SUCCESS'})
+        self.assertEqual(response.status_code, 201)
+        
     def test_comment_post_success(self):
         client  = Client()
         headers = {'HTTP_Authorization': self.token}
@@ -192,7 +197,7 @@ class ReviewTest(TestCase):
                 }
         
         response  = client.post('/reviews/like', data, content_type='application/json',**headers)
-        
+    
         self.assertEqual(response.json(), {'message' : 'KEY_ERROR'})
         self.assertEqual(response.status_code, 400)
 
@@ -204,6 +209,7 @@ class ReviewTest(TestCase):
                 }
         
         response  = client.post('/reviews/like', data, content_type='application/json',**headers)
+
         self.assertEqual(response.json(), {'message' : 'INVALID_REVIEW'})
         self.assertEqual(response.status_code, 401)
         
@@ -212,7 +218,9 @@ class ReviewTest(TestCase):
         headers = {'HTTP_Authorization': self.token}
     
         response  = client.delete('/reviews/like/1', content_type='application/json', **headers)
+
         self.assertEqual(response.status_code, 204)
+
     def test_comment_key_error(self):
         client  = Client()
         headers = {'HTTP_Authorization': self.token}

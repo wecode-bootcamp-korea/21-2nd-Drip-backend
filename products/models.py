@@ -21,7 +21,7 @@ class Search(models.Model):
         db_table = 'searched'
 
 class Product(models.Model):
-    name         = models.CharField(max_length=45)
+    name         = models.CharField(max_length=100)
     price        = models.DecimalField(max_digits=8, decimal_places=1)
     main_image   = models.URLField(max_length=200)
     description  = models.URLField(max_length=200)

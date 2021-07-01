@@ -3,11 +3,13 @@ import jwt
 from django.test       import Client, TestCase
 from unittest.mock     import patch, MagicMock
 from django.core.files import File
+from django.test import Client, TestCase
 
 from drip_settings   import SECRET_KEY, ALGORITHM
 from users.models    import User
 from products.models import Product, Search, SubCategory, Category
 from .models         import Review
+from .models         import Review, Like
 
 class ReviewTest(TestCase):
     @classmethod
@@ -19,6 +21,8 @@ class ReviewTest(TestCase):
             profile_image = 'asdjdjaj',
             origin_pk     = 1
         )
+        
+        cls.token   = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
 
         User.objects.create(
             id            = 2,
@@ -33,6 +37,7 @@ class ReviewTest(TestCase):
             id    = 1
         ) 
 
+        
         Category.objects.create(
             id   = 1,
             name = '엑티비티'
@@ -58,6 +63,7 @@ class ReviewTest(TestCase):
             id              = 1
         )
 
+        
         Product.objects.create(
             name            = '자전거',
             price           = '1500',
@@ -82,17 +88,20 @@ class ReviewTest(TestCase):
 
         review.created_at = '2021-06-30T17:09:15.464'
         review.save()
-
-    
-        cls.token   = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
         
+        Like.objects.create(
+            user_id   = 2,
+            review_id = 1
+        )
+
     def tearDown(self):
         User.objects.all().delete()
         Product.objects.all().delete()
         Search.objects.all().delete()
         Category.objects.all().delete()
         SubCategory.objects.all().delete()
-        Review.objects.all().delete()
+        Review.objects.all().delete(),
+        Like.objects.all().delete()
 
     @patch('reviews.views.boto3.client')
     def test_review_post_success(self, mock_s3client):
@@ -142,3 +151,47 @@ class ReviewTest(TestCase):
         response  = client.get('/reviews/1', content_type = 'application/json', **headers)
         self.assertEqual(response.json(), {'result' : review_list})
         self.assertEqual(response.status_code, 200)
+
+    def test_like_post_success(self):
+        client  = Client()
+        
+        headers = {'HTTP_Authorization': self.token}
+        data = {
+                'user' : 1,
+                'review_id' : 1
+                }
+        
+        response  = client.post('/reviews/like', data, content_type='application/json',**headers)
+        
+        self.assertEqual(response.json(), {'message' : 'SUCCESS'})
+        self.assertEqual(response.status_code, 201)
+
+    def test_like_key_error(self):
+        client  = Client()
+        headers = {'HTTP_Authorization': self.token}
+        data = {
+                
+                }
+        
+        response  = client.post('/reviews/like', data, content_type='application/json',**headers)
+        
+        self.assertEqual(response.json(), {'message' : 'KEY_ERROR'})
+        self.assertEqual(response.status_code, 400)
+
+    def test_invalid_review_error(self):
+        client  = Client()
+        headers = {'HTTP_Authorization': self.token}
+        data = {
+                'review_id' : 100
+                }
+        
+        response  = client.post('/reviews/like', data, content_type='application/json',**headers)
+        self.assertEqual(response.json(), {'message' : 'INVALID_REVIEW'})
+        self.assertEqual(response.status_code, 401)
+        
+    def test_like_delete_success(self):
+        client  = Client()
+        headers = {'HTTP_Authorization': self.token}
+    
+        response  = client.delete('/reviews/like/1', content_type='application/json', **headers)
+        self.assertEqual(response.status_code, 204)

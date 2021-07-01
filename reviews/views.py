@@ -1,4 +1,4 @@
-import boto3
+import boto3, json
 
 from logging                     import log
 from django.db.models.aggregates import Count
@@ -49,7 +49,7 @@ class ReviewView(View):
                 product   = product,
             )
             return JsonResponse({'result' : 'SUCCESS'}, status = 201)
-
+            
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status = 400)
 
@@ -76,6 +76,58 @@ class ReviewView(View):
             'like_count'   : review.like_count,
             'review_count' : reviews.count(),
             'image_url'    : review.image_url,
-            'like'         : Like.objects.filter(user_id = user.id, review_id = review.id).exists()
+            'like'         : Like.objects.filter(user_id = user.id, review_id = review.id).exists(),
+            'user_image'   : review.user.profile_image
             } for review in reviews]
         return JsonResponse({'result' : review_list}, status = 200)
+
+class LikeView(View):
+    @login_decorator
+    def post(self, request):
+        try:
+            data      = json.loads(request.body)
+            user      = request.user
+            review_id = data['review_id']
+
+            if not Review.objects.filter(id = review_id).exists():
+                return JsonResponse({'message' : 'INVALID_REVIEW'}, status = 401)
+
+            if not Like.objects.filter(user = user, review_id = review_id).exists():
+                Like.objects.create(user = user, review_id = review_id)
+                return JsonResponse({'message' : 'SUCCESS'}, status= 201)
+
+        except KeyError:
+            return JsonResponse({'message' : 'KEY_ERROR'}, status = 400)
+
+    def delete(self, request, review_id):
+        Like.objects.filter(user = request.user, review_id = review_id).delete()
+        return JsonResponse({'message' : 'SUCCESS'}, status = 204)
+
+class CommentView(View):
+    @login_decorator
+    def post(self, request):
+        try:
+            data    = json.loads(request.body)
+            content = data['content']
+            user    = request.user
+            review  = Review.objects.get(id=data['review'])
+            
+            Comment.objects.create(
+                user    = user,
+                content = content,
+                review  = review
+            )
+            return JsonResponse({'message' : 'SUCCESS'}, status = 201)
+            
+        except KeyError:
+            return JsonResponse({'message' : 'KEY_ERROR'}, status = 400)
+
+    def get(self, request, review_id):
+
+        comment_list = [{
+            'user'    : comment_list.user.id,
+            'content' : comment_list.content,
+            'review'  : review_id
+        }for comment_list in Comment.objects.filter(review_id = review_id)]
+            
+        return JsonResponse({'result' : comment_list}, status = 200)

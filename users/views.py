@@ -29,14 +29,14 @@ class KakaoSigninView(View):
                 profile_image = user['kakao_account']['profile'].get('profile_image_url'),
                 origin_pk     = user.get('id')
             )
-
+            
             result = {
                 'name'          : user.name,
                 'profile_image' : user.profile_image,
                 'email'         : user.email
             }
             token = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
-        
+            
             return JsonResponse({'token' : token, 'data' : result}, status = 201)
             
         except IntegrityError:
@@ -44,4 +44,3 @@ class KakaoSigninView(View):
 
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
-

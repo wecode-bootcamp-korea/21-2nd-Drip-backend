@@ -21,7 +21,7 @@ class ReviewTest(TestCase):
             origin_pk     = 1
         )
         
-        cls.token   = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
+        cls.token  = jwt.encode({'id' : user.id}, SECRET_KEY, ALGORITHM)
 
         User.objects.create(
             id            = 2,

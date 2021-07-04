@@ -64,4 +64,6 @@ class Product(models.Model):
         return (self.price)-(self.price*self.sub_category.discount)
 
 def check(user, product):
-    return True if Order.objects.filter(user_id=user.id, product_id=product.id, status_id=1).exists() else False
+    if user is None:
+        return False
+    return Order.objects.filter(user_id=user.id, product_id=product.id, status_id=1).exists()

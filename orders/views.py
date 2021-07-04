@@ -13,7 +13,7 @@ from products.models        import Product
 from users.utils            import login_decorator
 
 class OrderView(View):
-    @transaction.atomic
+    # @transaction.atomic
     @login_decorator
     def post(self, request):
         try:
@@ -50,12 +50,12 @@ class OrderView(View):
     @login_decorator
     def get(self, request):
         try:
-            status = int(request.GET.get('status', 1))
+            status = int(request.GET.get('status', 2))
             offset = int(request.GET.get('offset', 0))
             limit  = int(request.GET.get('limit', 4))
             
             products = Order.objects.select_related('product', 'product__sub_category')\
-                       .annotate(rating=Avg('product__review__rating')).order_by('-created_at')
+                       .annotate(rating=Avg('product__review__rating')).filter(status_id=status).order_by('-created_at')
             
             if status == 2:
                 products = products.filter(user=request.user)

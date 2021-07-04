@@ -23,6 +23,8 @@ Backend -  송준, 최승리, 박준영
 
 프립에 강점인 여러 취미를 같이 진행 할 수 있는부분을 중점으로 클론프로젝트를 진행하게 되었습니다. 
 
+![DRIP_메인](https://user-images.githubusercontent.com/81899770/124383168-e3b81880-dd05-11eb-880b-0c2be1add94f.gif)
+
 ---
 
 ### Modeling

@@ -5,9 +5,9 @@
 
 **개발인원 (5명)**
 
-[Frontend](https://github.com/wecode-bootcamp-korea/21-2st-Drip-frontend) |  박준우, 신미영
+Frontend - 박준우, 신미영
 
-[Backend](https://github.com/wecode-bootcamp-korea/21-2st-Drip-backend) |  송준, 최승리, 박준영
+Backend -  송준, 최승리, 박준영
 
 
 **개발기간**

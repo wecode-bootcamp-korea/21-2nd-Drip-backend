@@ -25,3 +25,21 @@ def login_decorator(func):
             return JsonResponse({'message' : 'INVALID_ACCESS_TOKEN'})
     
     return wrapper
+
+def login_decorator2(func):
+    def wrapper(self, request, *args, **kwargs):
+        try:
+            user_token    = request.headers.get('Authorization', None)
+            decoded_token = jwt.decode(user_token, SECRET_KEY, algorithms=ALGORITHM)
+            user          = User.objects.get(id = decoded_token['id'])
+            request.user  = user
+
+            return func(self, request, *args, **kwargs)
+
+        except jwt.DecodeError:
+            return JsonResponse({'message' : 'decodeerror'})
+        
+        except jwt.InvalidTokenError:
+            return JsonResponse({'message' : 'INVALID_ACCESS_TOKEN'})
+    
+    return wrapper

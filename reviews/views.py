@@ -7,12 +7,13 @@ from django.http import JsonResponse
 from datetime import datetime
 
 from drip_settings import ACCESS_KEY, SECRET_ACCESS_KEY
-from users.utils import login_decorator
+from users.utils import login_decorator2, login_decorator
 from .models import Like, Review, Comment
 from products.models import Product
+from users.models import User
 
 class ReviewView(View):
-    @login_decorator
+    @login_decorator2
     def post(self, request):
         try:
             user    = request.user
@@ -38,9 +39,9 @@ class ReviewView(View):
                     "ContentType" : image.content_type
                 }
             )
-
+            
             image_url = "https://dripawsbucket21.s3.ap-northeast-2.amazonaws.com/"+image_time+"."+image_type
-
+            
             Review.objects.create(
                 user      = user,
                 content   = content,
@@ -57,7 +58,10 @@ class ReviewView(View):
     @login_decorator
     def get(self, request, product_id):
         try:
-            user    = request.user
+            if request.user is None:
+                user    = User.objects.get(id=1)    
+            else:
+                user    = request.user
             order   = request.GET.get('order')
 
             order_conditions = {

@@ -1,16 +1,12 @@
 from django.views           import View
 from django.http            import JsonResponse
 from django.core.exceptions import FieldError
-from django.db.models       import Q
-
-# Create your views here.
-from django.views           import View
-from django.http            import JsonResponse
-from django.core.exceptions import FieldError
-from django.db.models       import Q
+from django.db.models       import Q, F
 
 from .models       import Product, check
 from users.utils   import login_decorator
+from orders.models import Order
+from users.models import User
 
 class ProductListView(View):
     @login_decorator
@@ -19,12 +15,18 @@ class ProductListView(View):
             category_id     = request.GET.get('categoryId', None)
             sub_category_id = request.GET.get('subcategoryId', None)
             sort            = request.GET.get('sortMethod', 'product_id')
+            search          = request.GET.get('keyword', None)
             reverse         = bool(request.GET.get('reverse', False))
             offset          = int(request.GET.get('offset', 0))
             limit           = int(request.GET.get('limit', 0))
             user            = request.user
+            if user is None:
+                user=User.objects.get(id=4)
 
             q = Q()
+
+            if search:
+                q &= Q(name__icontains=search)
 
             if category_id:
                 q &= Q(sub_category__category_id=category_id)
@@ -49,10 +51,10 @@ class ProductListView(View):
                 "date"          : product.date,
                 "new"           : product.new,
                 "hot"           : product.hot,
-                "check"         : check(user, product)
-            } for product in products]
+                "check"         : True if Order.objects.filter(user_id=user.id, product_id=product.id, status_id=1).exists() else False
+            } for product in products.iterator()]
 
-            if limit is 0:
+            if limit == 0:
                 sort_lists = sorted(product_list, key=lambda e: e[sort], reverse=reverse)
             else:
                 sort_lists = sorted(product_list, key=lambda e: e[sort], reverse=reverse)[offset:limit]
@@ -72,6 +74,8 @@ class ProductDetailView(View):
             offset = int(request.GET.get('offset', 0))
             limit  = int(request.GET.get('limit', 4))
             user   = request.user
+            if user is None:
+                user=User.objects.get(id=1)
 
             product = Product.objects.get(id=product_id)
 
@@ -84,7 +88,7 @@ class ProductDetailView(View):
                 "product_image" : product.main_image,
                 "avg_score"     : product.avgscore,
                 "description"   : product.description,
-                "check"         : check(user, product)
+                "check"         : True if Order.objects.filter(user_id=user.id, product_id=product.id, status_id=1).exists() else False
             }
 
             MD_recommends = Product.objects.filter(sub_category_id=product.sub_category_id).order_by('?')
@@ -101,3 +105,15 @@ class ProductDetailView(View):
             return JsonResponse({"result": {"Detail_info": product_list, "recommend": recommends_list[offset:limit]}}, status=200)
         except Product.DoesNotExist:
             return JsonResponse({"MESSAGE": "INVALID_PRODUCTS"}, status=400)
+
+class Fa(View):
+    def get(self, request):
+        
+    
+        searched_ranks = Product.objects.only('name').annotate(rank=F('searched__count'))\
+                            .order_by('-rank', '-id')[:5]
+        result = [{'name' : rank.name,
+                    'id' : rank.id} for rank in searched_ranks]
+
+          
+        return JsonResponse({'result' : result}, status=200)

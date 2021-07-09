@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.23, for osx10.16 (x86_64)
 --
--- Host: localhost    Database: drip
+-- Host: localhost    Database: drip2
 -- ------------------------------------------------------
 -- Server version	8.0.23
 
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categories` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `comments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `comments` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `review_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
@@ -78,8 +78,8 @@ DROP TABLE IF EXISTS `django_content_type`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `django_content_type` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `app_label` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `model` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `app_label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `model` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -104,8 +104,8 @@ DROP TABLE IF EXISTS `django_migrations`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `django_migrations` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `app` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `app` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -129,8 +129,8 @@ DROP TABLE IF EXISTS `django_session`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `django_session` (
-  `session_key` varchar(40) COLLATE utf8mb4_general_ci NOT NULL,
-  `session_data` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `session_key` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `session_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `expire_date` datetime(6) NOT NULL,
   PRIMARY KEY (`session_key`),
   KEY `django_session_expire_date_a5c62663` (`expire_date`)
@@ -218,12 +218,12 @@ DROP TABLE IF EXISTS `products`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `products` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(8,1) NOT NULL,
-  `main_image` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `main_image` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` datetime(6) NOT NULL,
-  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `sell_count` int NOT NULL,
   `date` date NOT NULL,
   `latitude` decimal(5,4) DEFAULT NULL,
@@ -244,7 +244,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'#강원 #정선 #덕산기계곡 #오지계곡트레킹',48000.0,'https://ibb.co/MsPRnyW','https://ibb.co/DKtJ413','2021-06-30 20:08:08.018403','',1230,'2021-06-04',NULL,NULL,1,1),(2,'[1박 2일 포천 여행] 디톡S 힐링푸드와 단독찜가마로 힐링해요~',160000.0,'https://ibb.co/j62L85Q','https://ibb.co/ryGJHbt','2021-06-30 20:08:08.019852','',123,'2021-06-13',NULL,NULL,2,2),(3,'서울호캉스 | 금요일 디어스 커뮤니티 패키지 with 드립캡틴',250000.0,'https://ibb.co/GpZw5Z0','https://ibb.co/y8hHhhY','2021-06-30 20:08:08.020440','',6356,'2021-06-05',NULL,NULL,3,2),(4,'[인천] 섬에서 쉬자, Slow Stay 소이작도',540000.0,'https://ibb.co/QF0zRjt','https://ibb.co/yBK1Mzc','2021-06-30 20:08:08.024412','',2132,'2021-05-11',NULL,NULL,4,2),(5,'[7월OPEN] [소규모] 국내최초 1박2일 불멍스키 혼펜 _우리끼리 넷',159000.0,'https://ibb.co/44x74JG','https://ibb.co/99WsvhH','2021-06-30 20:08:08.025402','',9789,'2021-06-05',NULL,NULL,5,2),(6,'[제주살기] 푸른달 일곱밤 에코라이프 in 소랑이싯다',300000.0,'https://ibb.co/d7TL86D','https://ibb.co/zH7DGYG','2021-06-30 20:08:08.026499','',4,'2020-05-10',NULL,NULL,6,2),(7,'[특별선물 제공] 프립버스 타고 서늘한 선자령 트레킹',70000.0,'https://ibb.co/nLRp6j3','https://ibb.co/j3b78wt','2021-06-30 20:08:08.027260','',321,'2020-06-11',NULL,NULL,7,1),(8,'[양양] 죽도해변 1박 서핑 캠프 + 왕복 셔틀버스까지!!',180000.0,'https://ibb.co/vxx0WsX','https://ibb.co/FsSPdB0','2021-06-30 20:08:08.027912','',768,'2020-06-11',NULL,NULL,8,2),(9,'[▼1만원할인/부산] 현역 선수와 함께하는 광안리 선셋 패들보드',25000.0,'https://ibb.co/9qpCwVp','https://ibb.co/0M4Zf8Y','2021-06-30 20:08:08.028579','',435,'2020-06-11',NULL,NULL,9,2),(10,'[양양] 서울-양양해변과 서피비치, 주문진까지 가는 서핑버스',25000.0,'https://ibb.co/ncCg2t5','https://ibb.co/pzpw0Md','2021-06-30 20:08:08.030271','',123,'2020-06-11',NULL,NULL,10,2),(11,'나이프를 활용한 페인팅 클래스 유화&나이프화(예약 가능)',46000.0,'https://ibb.co/rQ5Vn0Q','https://ibb.co/T0M9dYc','2021-06-30 20:08:08.031124','',1230,'2021-06-04',NULL,NULL,11,3),(12,'청담동 메이크업 샵에서 내 얼굴에 꼭 맞는 메이크업 배우기 (예약 가능)',70000.0,'https://ibb.co/K98mD2h','https://ibb.co/K0rBJPb','2021-06-30 20:08:08.031778','',123,'2021-06-13',NULL,NULL,12,4),(13,'[사당/동작] 주말 아침을 여는 요가 원데이/정기권/회차권 (예약 가능)',18000.0,'https://ibb.co/QYhcrm7','https://ibb.co/ZYc35Sk','2021-06-30 20:08:08.033172','',6356,'2021-06-05',NULL,NULL,13,5),(14,'[양재] 휘낭시에 원데이 클래스 (예약 가능)',50000.0,'https://ibb.co/kyp0L1Q','https://ibb.co/2sb1zVd','2021-06-30 20:08:08.034180','',2132,'2021-05-11',NULL,NULL,14,6),(15,'서귀포 오션뷰 요가 원데이클래스, 카페에서 음료한잔 @프립캠프 제주',30000.0,'https://ibb.co/G5vMN86','https://ibb.co/z4tMQxb','2021-06-30 20:08:08.035006','',9789,'2021-06-05',NULL,NULL,15,6),(16,'[성수] 주말 아침을 여는 요가 원데이/정기권/회차권 (예약 가능)',26000.0,'https://ibb.co/9Vby8w6','https://ibb.co/3rJJFN8','2021-06-30 20:08:08.036156','',4,'2020-06-11',NULL,NULL,16,5),(17,'[퍼스널컬러] 자존감 UP 비주얼 컨설팅! (예약 가능)',40000.0,'https://ibb.co/7yDfp2p','https://ibb.co/YPwgswC','2021-06-30 20:08:08.036869','',321,'2020-06-11',NULL,NULL,17,4),(18,'[강남] 자세교정 요가클리닉 90분 프로그램(일일프립 주말)',29000.0,'https://ibb.co/LDFfGQR','https://ibb.co/qBBgy56','2021-06-30 20:08:08.037793','',768,'2020-06-11',NULL,NULL,18,5),(19,'역시 노래는 혜인쌤 원데이, 원포인트 족집게 레슨 (예약 가능)',40000.0,'https://ibb.co/bsn152q','https://ibb.co/cXQL46r','2021-06-30 20:08:08.038728','',435,'2020-06-11',NULL,NULL,19,3),(20,'나만의 매력적인 이미지 브랜딩 (퍼스널컬러+메이크업)',90000.0,'https://ibb.co/WnVLyB0','https://ibb.co/6NdjYn0','2021-06-30 20:08:08.039400','',123,'2020-06-11',NULL,NULL,20,4);
+INSERT INTO `products` VALUES (1,'#강원 # 정선 #덕산기계곡 #오지계곡트레킹',48000.0,'https://ibb.co/MsPRnyW','https://ibb.co/DKtJ413','2021-06-30 20:08:08.018403','',1230,'2021-06-04',NULL,NULL,1,1),(2,'[1박 2일 포천 여행] 디톡S 힐링푸드와 단독찜가마로 힐랭해요~',160000.0,'https://ibb.co/j62L85Q','https://ibb.co/ryGJHbt','2021-06-30 20:08:08.019852','',123,'2021-06-13',NULL,NULL,2,2),(3,'서울호캉스 | 금요일 디어스 커뮤니티 패키지 with 드립캡틴',250000.0,'https://ibb.co/GpZw5Z0','https://ibb.co/y8hHhhY','2021-06-30 20:08:08.020440','',6356,'2021-06-05',NULL,NULL,3,2),(4,'[인천] 섬에서 쉬자, Slow Stay 소이작도',540000.0,'https://ibb.co/QF0zRjt','https://ibb.co/yBK1Mzc','2021-06-30 20:08:08.024412','',2132,'2021-05-11',NULL,NULL,4,2),(5,'[7월 OPEN] [소규모] 국내최초 1박2일 불멍스키 혼펜 _우리끼리 넷',159000.0,'https://ibb.co/44x74JG','https://ibb.co/99WsvhH','2021-06-30 20:08:08.025402','',9789,'2021-06-05',NULL,NULL,5,2),(6,'[제주살기] 푸른달 일곱밤 에코라이프 in 소랑이싯다',300000.0,'https://ibb.co/d7TL86D','https://ibb.co/zH7DGYG','2021-06-30 20:08:08.026499','',4,'2020-05-10',NULL,NULL,6,2),(7,'[특별선물 제공] 프립버스 타고 서늘한 선자령 트레킹',70000.0,'https://ibb.co/nLRp6j3','https://ibb.co/j3b78wt','2021-06-30 20:08:08.027260','',321,'2020-06-11',NULL,NULL,7,1),(8,'[양양] 죽도해변 1박 서핑 캠프 + 왕복 셔틀버스까지!!',180000.0,'https://ibb.co/vxx0WsX','https://ibb.co/FsSPdB0','2021-06-30 20:08:08.027912','',768,'2020-06-11',NULL,NULL,8,2),(9,'[1만원할인/부산] 현역 선수와 함께하는 광안리 선셋 패들보드',25000.0,'https://ibb.co/9qpCwVp','https://ibb.co/0M4Zf8Y','2021-06-30 20:08:08.028579','',435,'2020-06-11',NULL,NULL,9,2),(10,'[양양] 서울-양양해변과 서피비치, 주문전까지 가는 서핑버스',25000.0,'https://ibb.co/ncCg2t5','https://ibb.co/pzpw0Md','2021-06-30 20:08:08.030271','',123,'2020-06-11',NULL,NULL,10,2),(11,'나이프를 활용한 페인팅 클래스 유화&나이프화(예약 가능)',46000.0,'https://ibb.co/rQ5Vn0Q','https://ibb.co/T0M9dYc','2021-06-30 20:08:08.031124','',1230,'2021-06-04',NULL,NULL,11,3),(12,'청담동 메이크업 샵에서 내 얼굴에 꼭 맞는 메이크업 배우기 (예약 가능)',70000.0,'https://ibb.co/K98mD2h','https://ibb.co/K0rBJPb','2021-06-30 20:08:08.031778','',123,'2021-06-13',NULL,NULL,12,4),(13,'[사당/동작] 주말 아침을 여는 요가 원데이/정기권/회차권 (예약 가능)',18000.0,'https://ibb.co/QYhcrm7','https://ibb.co/ZYc35Sk','2021-06-30 20:08:08.033172','',6356,'2021-06-05',NULL,NULL,13,5),(14,'[양재] 휘낭시에 원데이 클래스 (예약 가능)',50000.0,'https://ibb.co/kyp0L1Q','https://ibb.co/2sb1zVd','2021-06-30 20:08:08.034180','',2132,'2021-05-11',NULL,NULL,14,6),(15,'서귀포 오션뷰 요가 원데이클래스, 카페에서 음료한잔 @프립캠프 제주',30000.0,'https://ibb.co/G5vMN86','https://ibb.co/z4tMQxb','2021-06-30 20:08:08.035006','',9789,'2021-06-05',NULL,NULL,15,6),(16,'[성수] 주말 아침을 여는 요가 원데이/정기권/회차권 (예약 가능)',26000.0,'https://ibb.co/9Vby8w6','https://ibb.co/3rJJFN8','2021-06-30 20:08:08.036156','',4,'2020-06-11',NULL,NULL,16,5),(17,'[퍼스널컬러] 자존감 UP 비주얼 컨설팅! (예약 가능)',40000.0,'https://ibb.co/7yDfp2p','https://ibb.co/YPwgswC','2021-06-30 20:08:08.036869','',321,'2020-06-11',NULL,NULL,17,4),(18,'[강남] 자세교정 요가클리닉 90분 프로그램(일일프립 주말)',29000.0,'https://ibb.co/LDFfGQR','https://ibb.co/qBBgy56','2021-06-30 20:08:08.037793','',768,'2020-06-11',NULL,NULL,18,5),(19,'역시 노래는 혜인쌤 원데이, 원포인트 족집게 레슨 (예약 가능)',40000.0,'https://ibb.co/bsn152q','https://ibb.co/cXQL46r','2021-06-30 20:08:08.038728','',435,'2020-06-11',NULL,NULL,19,3),(20,'나만의 매력적인 이미지 브랜딩 (퍼스널컬러+메이크업)',90000.0,'https://ibb.co/WnVLyB0','https://ibb.co/6NdjYn0','2021-06-30 20:08:08.039400','',123,'2020-06-11',NULL,NULL,20,4);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,9 +257,9 @@ DROP TABLE IF EXISTS `reviews`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reviews` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` datetime(6) NOT NULL,
-  `image_url` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `image_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `rating` decimal(2,1) NOT NULL,
   `product_id` bigint NOT NULL,
   `user_id` bigint NOT NULL,
@@ -314,7 +314,7 @@ DROP TABLE IF EXISTS `status`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -338,7 +338,7 @@ DROP TABLE IF EXISTS `sub_categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sub_categories` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `discount` decimal(3,2) NOT NULL,
   `category_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
@@ -366,10 +366,10 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profile_image` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `origin_pk` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `profile_image` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `origin_pk` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -394,4 +394,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-01  9:37:19
+-- Dump completed on 2021-07-08 10:38:56

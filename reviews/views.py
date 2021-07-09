@@ -80,7 +80,7 @@ class ReviewView(View):
                 'image_url'    : review.image_url,
                 'like'         : Like.objects.filter(user_id = user.id, review_id = review.id).exists(),
                 'user_image'   : review.user.profile_image,
-                'avgrating' : reviews.aggregate(avgrating=Avg('rating'))
+                'avgrating'    : reviews.aggregate(avgrating=Avg('rating'))
                 } for review in reviews]
             return JsonResponse({'result' : review_list, 'avgrating' : reviews.aggregate(avgrating=Avg('rating'))['avgrating']}, status = 200)
 

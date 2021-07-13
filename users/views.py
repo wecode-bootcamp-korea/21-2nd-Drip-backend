@@ -11,7 +11,6 @@ class KakaoSigninView(View):
     def post(self, request):
         try:
             access_token = request.headers.get("Authorization")
-            
             if not access_token:
                 return JsonResponse({'message' : 'ACCESS_TOKEN_DOES_NOT_EXITS'}, status=401)
 
@@ -40,7 +39,7 @@ class KakaoSigninView(View):
             return JsonResponse({'token' : token, 'data' : result}, status = 201)
             
         except IntegrityError:
-            return JsonResponse({'message' : 'INTEGRITY_ERROR'}, status=401)
+            return JsonResponse({'message' : user}, status=404)
 
         except KeyError:
-            return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
+            return JsonResponse({'message' : 'KEY_ERROR'}, status=402)
